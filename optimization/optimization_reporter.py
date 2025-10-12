@@ -1,8 +1,9 @@
 import os
-import yaml
+
 import pandas as pd
-import plotly.graph_objects as go
 import plotly.express as px
+import plotly.graph_objects as go
+import yaml
 from plotly.subplots import make_subplots
 
 
@@ -39,9 +40,7 @@ class OptimizationReporter:
     def plot_parameter_heatmap(self, df, param_x, param_y):
         if param_x not in df.columns or param_y not in df.columns:
             return None
-        pivot = df.pivot_table(
-            index=param_y, columns=param_x, values="score", aggfunc="mean"
-        )
+        pivot = df.pivot_table(index=param_y, columns=param_x, values="score", aggfunc="mean")
         fig = px.imshow(
             pivot,
             title=f"Performance Surface: {param_x} vs {param_y}",
@@ -81,17 +80,13 @@ class OptimizationReporter:
         for strat in summary_df["strategy"].unique():
             df_sub = logs_df[logs_df["file"].str.contains(strat)]
             fig_conv = self.plot_convergence(df_sub, strat)
-            html_blocks.append(
-                fig_conv.to_html(full_html=False, include_plotlyjs="cdn")
-            )
+            html_blocks.append(fig_conv.to_html(full_html=False, include_plotlyjs="cdn"))
 
             cols = [c for c in df_sub.columns if c not in ["score", "file"]]
             if len(cols) >= 2:
                 fig_heat = self.plot_parameter_heatmap(df_sub, cols[0], cols[1])
                 if fig_heat:
-                    html_blocks.append(
-                        fig_heat.to_html(full_html=False, include_plotlyjs=False)
-                    )
+                    html_blocks.append(fig_heat.to_html(full_html=False, include_plotlyjs=False))
 
         # Global comparison
         fig_comp = self.plot_engine_comparison(summary_df)

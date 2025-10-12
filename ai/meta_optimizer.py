@@ -1,6 +1,7 @@
 # ai/meta_optimizer.py
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 
 class MetaOptimizationController:
@@ -39,10 +40,7 @@ class MetaOptimizationController:
             grad = np.mean(np.diff(hist)) if len(hist) > 1 else 0.0
 
             # Smooth updates
-            grad = (
-                self.momentum * self.prev_grad.get(name, 0.0)
-                + (1 - self.momentum) * grad
-            )
+            grad = self.momentum * self.prev_grad.get(name, 0.0) + (1 - self.momentum) * grad
             self.prev_grad[name] = grad
 
             # Adjust hyperparameters

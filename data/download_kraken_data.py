@@ -1,8 +1,9 @@
 import os
 import time
-import requests
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+import requests
 
 # ================================================================
 # 🔹 NEXORA Kraken Historical Data Downloader
@@ -68,9 +69,7 @@ def download_full_history(symbol: str, interval: str = "1m", save_every: int = 1
     if since:
         print(f"\n🔁 Resuming {symbol} from {pd.to_datetime(since, unit='s')}")
     else:
-        print(
-            f"\n📡 Starting full history download for {symbol} ({kraken_symbol}) @ {interval}"
-        )
+        print(f"\n📡 Starting full history download for {symbol} ({kraken_symbol}) @ {interval}")
 
     while True:
         params = {"pair": kraken_symbol, "interval": interval_value}
@@ -121,9 +120,7 @@ def download_full_history(symbol: str, interval: str = "1m", save_every: int = 1
                 combined_df = pd.concat(all_data, ignore_index=True)
                 if filename.exists():
                     old_df = pd.read_csv(filename)
-                    combined_df = pd.concat([old_df, combined_df]).drop_duplicates(
-                        subset=["time"]
-                    )
+                    combined_df = pd.concat([old_df, combined_df]).drop_duplicates(subset=["time"])
                 combined_df.to_csv(filename, index=False)
                 print(f"💾 Progress saved ({len(combined_df)} total rows).")
 

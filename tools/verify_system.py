@@ -4,15 +4,16 @@ Comprehensive verification of directories, configuration, strategy modules,
 and AI models (with architecture signature validation).
 """
 
+import hashlib
+import importlib
+import json
 import os
 import sys
-import json
-import importlib
-import hashlib
-import torch
-import yaml
 from datetime import datetime
 from pathlib import Path
+
+import torch
+import yaml
 
 # ---------------------------------------------------------------------
 # Setup
@@ -141,8 +142,7 @@ def check_strategies():
         try:
             module = importlib.import_module(strat)
             class_name = (
-                "".join([p.capitalize() for p in strat.split(".")[-1].split("_")])
-                + "Strategy"
+                "".join([p.capitalize() for p in strat.split(".")[-1].split("_")]) + "Strategy"
             )
             if hasattr(module, class_name):
                 results[strat] = {"status": True, "message": None}

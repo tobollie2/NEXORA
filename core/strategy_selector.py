@@ -16,7 +16,7 @@ class StrategySelector:
         self.strategy_map = {
             "TREND": "strategies.trend",
             "MEAN_REVERT": "strategies.mean_reversion",
-            "VOLATILE": "strategies.stat_arb"
+            "VOLATILE": "strategies.stat_arb",
         }
 
     def load_strategy(self, regime_name: str):
@@ -35,7 +35,9 @@ class StrategySelector:
             strategy_instance = strategy_class(logger=self.logger, config=self.config)
             self.active_strategy = strategy_instance
             if self.logger:
-                self.logger.info(f"🧭 Activated strategy: {strategy_class.__name__} ({regime_name})")
+                self.logger.info(
+                    f"🧭 Activated strategy: {strategy_class.__name__} ({regime_name})"
+                )
             return strategy_instance
         except Exception as e:
             if self.logger:
@@ -55,7 +57,9 @@ class StrategySelector:
         try:
             signals = self.active_strategy.generate_signals(features)
             if self.logger:
-                self.logger.info(f"Strategy {self.active_strategy.__class__.__name__} signals: {signals}")
+                self.logger.info(
+                    f"Strategy {self.active_strategy.__class__.__name__} signals: {signals}"
+                )
             return signals
         except Exception as e:
             if self.logger:

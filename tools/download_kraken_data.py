@@ -1,9 +1,10 @@
 import os
 import time
-import requests
-import pandas as pd
 from datetime import datetime
 from pathlib import Path
+
+import pandas as pd
+import requests
 
 # ================================================================
 # 🔹 Kraken Historical Data Downloader (Full History, Auto-Resume)
@@ -74,9 +75,7 @@ def save_to_csv(pair: str, interval_str: str, new_data):
     if filename.exists():
         df_old = pd.read_csv(filename)
         df_old["time"] = pd.to_datetime(df_old["time"])
-        df = pd.concat([df_old, df_new], ignore_index=True).drop_duplicates(
-            subset=["time"]
-        )
+        df = pd.concat([df_old, df_new], ignore_index=True).drop_duplicates(subset=["time"])
         print(f"📈 Appended {len(df_new)} new rows → {filename.name}")
     else:
         df = df_new
@@ -101,20 +100,14 @@ def download_all():
             if filename.exists():
                 df_existing = pd.read_csv(filename)
                 if not df_existing.empty:
-                    last_timestamp = int(
-                        pd.to_datetime(df_existing["time"].iloc[-1]).timestamp()
-                    )
-                    print(
-                        f"🔁 Resuming from {datetime.utcfromtimestamp(last_timestamp)}"
-                    )
+                    last_timestamp = int(pd.to_datetime(df_existing["time"].iloc[-1]).timestamp())
+                    print(f"🔁 Resuming from {datetime.utcfromtimestamp(last_timestamp)}")
 
             # Fetch paginated historical data
             while True:
                 ohlcv = fetch_kraken_ohlcv(pair, interval, since=last_timestamp)
                 if not ohlcv:
-                    print(
-                        f"⚠️ No more data or API limit reached for {pair} ({interval_str})."
-                    )
+                    print(f"⚠️ No more data or API limit reached for {pair} ({interval_str}).")
                     break
 
                 save_to_csv(pair, interval_str, ohlcv)

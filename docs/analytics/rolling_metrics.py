@@ -1,6 +1,7 @@
-import pandas as pd
-import numpy as np
 from typing import Optional
+
+import numpy as np
+import pandas as pd
 
 
 class RollingMetrics:
@@ -12,9 +13,7 @@ class RollingMetrics:
     def compute(self, df: pd.DataFrame) -> pd.DataFrame:
         required_cols = {"equity_curve", "returns"}
         if not required_cols.issubset(df.columns):
-            raise ValueError(
-                f"Missing columns in DataFrame: {required_cols - set(df.columns)}"
-            )
+            raise ValueError(f"Missing columns in DataFrame: {required_cols - set(df.columns)}")
 
         df = df.copy()
 
@@ -24,9 +23,7 @@ class RollingMetrics:
         # Rolling Sharpe Ratio
         rolling_mean = df["returns"].rolling(self.window).mean()
         rolling_std = df["returns"].rolling(self.window).std(ddof=0)
-        df["rolling_sharpe"] = np.where(
-            rolling_std != 0, rolling_mean / rolling_std, np.nan
-        )
+        df["rolling_sharpe"] = np.where(rolling_std != 0, rolling_mean / rolling_std, np.nan)
 
         # Rolling Maximum Drawdown
         df["cummax"] = df["equity_curve"].cummax()

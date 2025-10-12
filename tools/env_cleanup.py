@@ -5,12 +5,12 @@ Cleans up duplicate or stale virtual environments, resets VS Code configuration,
 and optionally rebuilds the correct environment (test_env) automatically.
 """
 
-import os
 import json
+import os
 import shutil
 import subprocess
-from pathlib import Path
 import sys
+from pathlib import Path
 
 print("\n🧹 Starting NEXORA Environment Cleanup & Rebuild...\n")
 
@@ -65,9 +65,7 @@ if target_env.exists() and requirements_file.exists():
     pip_path = target_env / "Scripts" / "pip.exe"
     print("📦 Installing dependencies from requirements.txt...")
     try:
-        subprocess.run(
-            [str(pip_path), "install", "-r", str(requirements_file)], check=True
-        )
+        subprocess.run([str(pip_path), "install", "-r", str(requirements_file)], check=True)
         print("✅ Dependencies installed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"❌ Failed to install dependencies: {e}")

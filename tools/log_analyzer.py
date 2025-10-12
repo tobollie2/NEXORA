@@ -1,10 +1,11 @@
 import os
-import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-import seaborn as sns
+
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import seaborn as sns
 
 
 class NEXORAAnalyzer:
@@ -63,8 +64,8 @@ class NEXORAAnalyzer:
             .agg(["count", "sum", "mean"])
             .sort_values("sum", ascending=False)
         )
-        symbol_perf["win_rate"] = (
-            self.df.groupby("symbol")["pnl"].apply(lambda x: (x > 0).mean() * 100)
+        symbol_perf["win_rate"] = self.df.groupby("symbol")["pnl"].apply(
+            lambda x: (x > 0).mean() * 100
         )
 
         metrics = {
@@ -171,7 +172,9 @@ class NEXORAAnalyzer:
             print("⚠️ Strategy column missing, cannot compute correlation.")
             return None
 
-        pivot = self.df.pivot_table(index="timestamp", columns="strategy", values="pnl", aggfunc="sum").fillna(0)
+        pivot = self.df.pivot_table(
+            index="timestamp", columns="strategy", values="pnl", aggfunc="sum"
+        ).fillna(0)
         corr = pivot.corr()
 
         plt.figure(figsize=(7, 5))

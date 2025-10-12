@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class RiskManager:
     """
     Advanced risk management for NEXORA.
@@ -19,7 +20,7 @@ class RiskManager:
     def update_volatility(self, market_data):
         """Estimate rolling volatility per symbol using recent returns."""
         for symbol, data in market_data.items():
-            prices = np.array(data["price_buffer"][-self.vol_window:])
+            prices = np.array(data["price_buffer"][-self.vol_window :])
             if len(prices) > 2:
                 returns = np.diff(np.log(prices))
                 vol = np.std(returns)

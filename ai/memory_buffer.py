@@ -1,6 +1,6 @@
 # /ai/memory_buffer.py
-from collections import deque
 import random
+from collections import deque
 
 
 class ReplayMemory:

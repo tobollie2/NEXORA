@@ -1,11 +1,11 @@
 # backtest/performance_metrics.py
 
 import os
-import pandas as pd
-import numpy as np
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
+import numpy as np
+import pandas as pd
 
 # ============================================================================
 # 🔹 Core Performance Metric Utilities
@@ -39,17 +39,13 @@ def compute_performance_metrics(
 
     # Annualized Sharpe ratio
     sharpe = (
-        np.sqrt(252) * (mean_return - risk_free_rate / 252) / std_return
-        if std_return > 0
-        else 0.0
+        np.sqrt(252) * (mean_return - risk_free_rate / 252) / std_return if std_return > 0 else 0.0
     )
 
     # Sortino ratio (downside deviation)
     downside = returns[returns < 0].std()
     sortino = (
-        np.sqrt(252) * (mean_return - risk_free_rate / 252) / downside
-        if downside > 0
-        else 0.0
+        np.sqrt(252) * (mean_return - risk_free_rate / 252) / downside if downside > 0 else 0.0
     )
 
     # Max drawdown

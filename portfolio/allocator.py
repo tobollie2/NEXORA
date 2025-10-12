@@ -1,5 +1,7 @@
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
+
 from monitoring.logging_utils import log_trade
 
 
@@ -47,9 +49,7 @@ class PortfolioAllocator:
             # Same direction — scale in
             if pos["side"] == side:
                 new_qty = pos["qty"] + qty
-                pos["entry_price"] = (
-                    (pos["entry_price"] * pos["qty"]) + (price * qty)
-                ) / new_qty
+                pos["entry_price"] = ((pos["entry_price"] * pos["qty"]) + (price * qty)) / new_qty
                 pos["qty"] = new_qty
                 self.cash -= trade_value
                 pnl = 0.0

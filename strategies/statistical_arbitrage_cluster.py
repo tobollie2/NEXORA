@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 from statsmodels.tsa.stattools import coint
+
 from ai.cointegration.johansen_module import JohansenCointegration
 
 
@@ -18,9 +19,7 @@ class StatArbCluster:
     meta-learning.
     """
 
-    def __init__(
-        self, p_threshold: float = 0.05, min_rank: int = 1, max_assets: int = 6
-    ):
+    def __init__(self, p_threshold: float = 0.05, min_rank: int = 1, max_assets: int = 6):
         """
         Parameters
         ----------
@@ -100,9 +99,9 @@ class StatArbCluster:
         result = self._find_cointegrated_groups(prices)
         score = self._cluster_score(result)
         result["score"] = round(score, 3)
-        result["valid"] = (
-            result["method"] == "Engle-Granger" and result["rank"] == 1
-        ) or (result["method"] == "Johansen" and result["rank"] >= self.min_rank)
+        result["valid"] = (result["method"] == "Engle-Granger" and result["rank"] == 1) or (
+            result["method"] == "Johansen" and result["rank"] >= self.min_rank
+        )
         return result
 
     def filter_valid_clusters(self, cluster_dict: dict) -> dict:

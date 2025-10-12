@@ -1,8 +1,9 @@
 # /strategies/statistical_arbitrage.py
 import numpy as np
 import pandas as pd
-from statsmodels.tsa.stattools import coint
 from statsmodels.api import OLS, add_constant
+from statsmodels.tsa.stattools import coint
+
 from strategies.base_strategy import BaseStrategy
 
 

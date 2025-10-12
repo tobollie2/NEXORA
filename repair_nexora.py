@@ -34,6 +34,7 @@ CRITICAL_FILES = {
     "monitoring/live_logger.py": "# placeholder for live logger\n",
 }
 
+
 # ----------------------------------------------------------------------
 # Utility
 # ----------------------------------------------------------------------
@@ -42,10 +43,12 @@ def ensure_dir(path: Path):
         path.mkdir(parents=True, exist_ok=True)
         print(f"🧱 Created directory: {path.relative_to(ROOT)}")
 
+
 def ensure_file(path: Path, content: str = ""):
     if not path.exists():
         path.write_text(content)
         print(f"📄 Created placeholder file: {path.relative_to(ROOT)}")
+
 
 def ensure_init_files(root: Path):
     for d in root.rglob("*"):
@@ -54,6 +57,7 @@ def ensure_init_files(root: Path):
             if not init.exists():
                 init.write_text("# Auto-generated init for NEXORA package\n")
                 print(f"🧩 Added: {init.relative_to(ROOT)}")
+
 
 # ----------------------------------------------------------------------
 # Rebuild sequence

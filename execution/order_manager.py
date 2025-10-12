@@ -1,6 +1,7 @@
 import random
 import time
 from datetime import datetime
+
 from monitoring.logging_utils import log_trade
 
 
@@ -63,7 +64,7 @@ class OrderManager:
             qty=trade["qty"],
             price=trade["price"],
             pnl=0.0,
-            equity=0.0
+            equity=0.0,
         )
 
         return trade

@@ -1,9 +1,12 @@
 # strategies/trend.py
 # pyright: strict
 from __future__ import annotations
+
 from typing import Any, Dict, Optional
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+
 from strategies.base_strategy import BaseStrategy
 
 
@@ -30,9 +33,7 @@ class TrendFollowingStrategy(BaseStrategy):
         long_val = self.get_param("long_window", 100)
 
         # Safe conversions
-        short_window = (
-            int(short_val) if isinstance(short_val, (int, float, str)) else 20
-        )
+        short_window = int(short_val) if isinstance(short_val, (int, float, str)) else 20
         long_window = int(long_val) if isinstance(long_val, (int, float, str)) else 100
 
         df = data.copy()
@@ -76,8 +77,6 @@ class TrendFollowingStrategy(BaseStrategy):
 
         total_return = 0.0
         if df.shape[0] > 1 and df["close"].iloc[0] != 0:
-            total_return = (df["close"].iloc[-1] - df["close"].iloc[0]) / df[
-                "close"
-            ].iloc[0]
+            total_return = (df["close"].iloc[-1] - df["close"].iloc[0]) / df["close"].iloc[0]
 
         return {"strategy": "TrendFollowing", "total_return": total_return}

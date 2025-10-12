@@ -1,7 +1,8 @@
 # /ai/temporal_memory.py
-import numpy as np
-from collections import deque, defaultdict
+from collections import defaultdict, deque
 from datetime import datetime
+
+import numpy as np
 
 
 class TemporalMemory:

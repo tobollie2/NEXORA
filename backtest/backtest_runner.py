@@ -1,15 +1,16 @@
 # backtest_runner.py
 import os
-import pandas as pd
 import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Any, Dict, List
 
+import pandas as pd
+
 from backtest.performance_metrics import BacktestReportGenerator
-from strategies.trend_following import TrendFollowingStrategy
 from strategies.mean_reversion import MeanReversionStrategy
 from strategies.statistical_arbitrage import StatisticalArbitrageStrategy
+from strategies.trend_following import TrendFollowingStrategy
 
 
 class BacktestRunner:
@@ -71,9 +72,7 @@ class BacktestRunner:
         with ThreadPoolExecutor(max_workers=4) as executor:
             for strat_name, strat_cls in self.strategies.items():
                 for symbol in self.symbols:
-                    futures.append(
-                        executor.submit(self.run_strategy, strat_cls, symbol)
-                    )
+                    futures.append(executor.submit(self.run_strategy, strat_cls, symbol))
 
             for future in as_completed(futures):
                 try:

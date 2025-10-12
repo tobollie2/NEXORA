@@ -1,5 +1,5 @@
-import os
 import csv
+import os
 from datetime import datetime
 
 
@@ -17,31 +17,35 @@ class TradeLogger:
         if not os.path.exists(self.trade_log_path):
             with open(self.trade_log_path, mode="w", newline="") as file:
                 writer = csv.writer(file)
-                writer.writerow([
-                    "timestamp",
-                    "strategy",
-                    "symbol",
-                    "signal",
-                    "price",
-                    "quantity",
-                    "pnl",
-                    "equity"
-                ])
+                writer.writerow(
+                    [
+                        "timestamp",
+                        "strategy",
+                        "symbol",
+                        "signal",
+                        "price",
+                        "quantity",
+                        "pnl",
+                        "equity",
+                    ]
+                )
 
     def record_trade(self, strategy, symbol, signal, price, quantity, pnl, equity):
         """Write a new trade entry to the CSV log."""
         with open(self.trade_log_path, mode="a", newline="") as file:
             writer = csv.writer(file)
-            writer.writerow([
-                datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
-                strategy,
-                symbol,
-                signal,
-                f"{price:.2f}",
-                f"{quantity:.4f}",
-                f"{pnl:.2f}",
-                f"{equity:.2f}"
-            ])
+            writer.writerow(
+                [
+                    datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                    strategy,
+                    symbol,
+                    signal,
+                    f"{price:.2f}",
+                    f"{quantity:.4f}",
+                    f"{pnl:.2f}",
+                    f"{equity:.2f}",
+                ]
+            )
 
     def summarize(self):
         """Generate summary statistics from the trade log."""

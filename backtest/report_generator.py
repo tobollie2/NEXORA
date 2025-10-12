@@ -1,8 +1,10 @@
 import os
+
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 from plotly.subplots import make_subplots
+
 from analytics.rolling_metrics import RollingMetrics
 
 
@@ -14,9 +16,7 @@ class BacktestReportGenerator:
         self.metrics_engine = RollingMetrics(window=window)
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def generate_html_report(
-        self, df: pd.DataFrame, strategy_name: str, asset: str
-    ) -> str:
+    def generate_html_report(self, df: pd.DataFrame, strategy_name: str, asset: str) -> str:
         # Compute rolling metrics
         df = self.metrics_engine.compute(df)
         summary_df = self.metrics_engine.summary(df)
@@ -37,9 +37,7 @@ class BacktestReportGenerator:
 
         # Equity curve
         fig.add_trace(
-            go.Scatter(
-                x=df.index, y=df["equity_curve"], name="Equity Curve", mode="lines"
-            ),
+            go.Scatter(x=df.index, y=df["equity_curve"], name="Equity Curve", mode="lines"),
             row=1,
             col=1,
         )
@@ -116,9 +114,7 @@ class BacktestReportGenerator:
         )
 
         # Save to HTML
-        output_path = os.path.join(
-            self.output_dir, f"{strategy_name}_{asset}_report.html"
-        )
+        output_path = os.path.join(self.output_dir, f"{strategy_name}_{asset}_report.html")
         pio.write_html(
             fig,
             file=output_path,
@@ -128,9 +124,7 @@ class BacktestReportGenerator:
         )
 
         # Append summary table HTML
-        summary_html = pio.to_html(
-            summary_table, include_plotlyjs=False, full_html=False
-        )
+        summary_html = pio.to_html(summary_table, include_plotlyjs=False, full_html=False)
         with open(output_path, "a", encoding="utf-8") as f:
             f.write("<h3>Summary Statistics</h3>" + summary_html)
 
@@ -150,7 +144,5 @@ if __name__ == "__main__":
     df_demo.index = pd.date_range(start="2024-01-01", periods=len(df_demo), freq="D")
 
     gen = BacktestReportGenerator()
-    path = gen.generate_html_report(
-        df_demo, strategy_name="TrendFollowing", asset="BTCUSD"
-    )
+    path = gen.generate_html_report(df_demo, strategy_name="TrendFollowing", asset="BTCUSD")
     print(f"Report saved to: {path}")

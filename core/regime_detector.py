@@ -25,11 +25,7 @@ class RegimeDetector:
         self.last_regime = None
         self.feature_history = pd.DataFrame()
 
-        self.regime_labels = {
-            0: "TREND",
-            1: "MEAN_REVERT",
-            2: "VOLATILE"
-        }
+        self.regime_labels = {0: "TREND", 1: "MEAN_REVERT", 2: "VOLATILE"}
 
     # -----------------------------
     # Update regime classification
@@ -61,7 +57,9 @@ class RegimeDetector:
             X = self.feature_history.select_dtypes(include=np.number).fillna(0)
             X_scaled = self.scaler.fit_transform(X)
             self.model.fit(X_scaled)
-            regime_id = self.model.predict(self.scaler.transform(features.select_dtypes(include=np.number)))[0]
+            regime_id = self.model.predict(
+                self.scaler.transform(features.select_dtypes(include=np.number))
+            )[0]
             regime_ml = self.regime_labels.get(regime_id, "UNKNOWN")
 
             if self.mode == "ml":

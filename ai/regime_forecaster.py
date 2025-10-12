@@ -1,8 +1,10 @@
 # ai/regime_forecaster.py
 
+from typing import Union
+
 import numpy as np
 import pandas as pd
-from typing import Union
+
 from ai.models.regime_lstm_trainer import load_regime_model
 
 
@@ -26,9 +28,7 @@ class RegimeForecaster:
             print(f"⚠️ Could not load regime model: {e}")
             self.model = None
 
-    def predict_regime(
-        self, prices: Union[pd.DataFrame, np.ndarray, list, pd.Series]
-    ) -> str:
+    def predict_regime(self, prices: Union[pd.DataFrame, np.ndarray, list, pd.Series]) -> str:
         """
         Predicts the current regime from price data.
         Handles multiple input types safely and returns a string label.

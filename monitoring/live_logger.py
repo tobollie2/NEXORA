@@ -1,12 +1,13 @@
 # /monitoring/live_logger.py
-import time
 import logging
-import pandas as pd
+import time
 from datetime import datetime
+
+import pandas as pd
 from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
 from rich.live import Live
+from rich.panel import Panel
+from rich.table import Table
 
 
 class LiveLogger:
@@ -50,19 +51,12 @@ class LiveLogger:
         table.add_row("Last Price", str(last_price))
 
         pos_str = (
-            "\n".join(
-                [
-                    f"{k}: {v['size']} @ {v['avg_price']:.2f}"
-                    for k, v in positions.items()
-                ]
-            )
+            "\n".join([f"{k}: {v['size']} @ {v['avg_price']:.2f}" for k, v in positions.items()])
             or "No Open Positions"
         )
         panel = Panel(pos_str, title="Current Positions", border_style="green")
 
-        with Live(
-            auto_refresh=False, console=self.console, refresh_per_second=2
-        ) as live:
+        with Live(auto_refresh=False, console=self.console, refresh_per_second=2) as live:
             live.update(Panel(table, title="System Metrics", border_style="blue"))
             live.update(panel)
             live.refresh()

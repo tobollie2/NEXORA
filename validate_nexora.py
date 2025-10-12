@@ -1,6 +1,7 @@
 import os
-import yaml
 from pathlib import Path
+
+import yaml
 
 ROOT = Path(".").resolve()
 
@@ -20,7 +21,7 @@ EXPECTED_DIRS = [
     "live",
     "monitoring",
     "tools",
-    "reports"
+    "reports",
 ]
 
 EXPECTED_FILES = [
@@ -28,8 +29,9 @@ EXPECTED_FILES = [
     "backtest/backtest_runner.py",
     "optimization/optimization_runner.py",
     "live/live_engine.py",
-    "monitoring/live_logger.py"
+    "monitoring/live_logger.py",
 ]
+
 
 # ---------------------------------------------------------------------------
 # 2️⃣ Helper functions
@@ -38,12 +40,14 @@ def check_path(path):
     p = ROOT / path
     return p.exists(), str(p)
 
+
 def read_yaml_safe(path):
     try:
         with open(path, "r") as f:
             return yaml.safe_load(f)
     except Exception as e:
         return f"Error reading YAML: {e}"
+
 
 # ---------------------------------------------------------------------------
 # 3️⃣ Validation logic

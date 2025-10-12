@@ -17,7 +17,7 @@ delete_patterns = [
     "venv",
     ".venv",
     "env",
-    "site-packages"
+    "site-packages",
 ]
 
 removed = []

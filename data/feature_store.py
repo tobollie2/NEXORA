@@ -1,7 +1,7 @@
 # File: data/feature_store.py
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 class FeatureStore:
@@ -52,7 +52,9 @@ class FeatureStore:
         df["vol_ratio"] = df["volume"] / df["vol_mean_20"]
 
         # --- Z-score of returns (normalized drift) ---
-        df["zscore_ret"] = (df["returns"] - df["returns"].rolling(50).mean()) / df["returns"].rolling(50).std()
+        df["zscore_ret"] = (df["returns"] - df["returns"].rolling(50).mean()) / df[
+            "returns"
+        ].rolling(50).std()
 
         # Drop NaN and keep only last row for live use
         df = df.dropna().reset_index(drop=True)

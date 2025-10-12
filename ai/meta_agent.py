@@ -11,18 +11,18 @@ Adds:
 
 from __future__ import annotations
 
-import sys
 import json
+import sys
 import threading
-import pandas as pd
-from pathlib import Path
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict
 
-from ai.models.regime_forecaster import RegimeForecaster
-from ai.models.regime_drift_monitor import DriftMonitor
-from ai.models.regime_lstm_trainer import train_regime_lstm, load_regime_model
+import pandas as pd
 
+from ai.models.regime_drift_monitor import DriftMonitor
+from ai.models.regime_forecaster import RegimeForecaster
+from ai.models.regime_lstm_trainer import load_regime_model, train_regime_lstm
 
 # Ensure project root discoverable for nested imports
 sys.path.append(str(Path(__file__).resolve().parents[1]))
@@ -115,9 +115,7 @@ class MetaAgent:
 
         # Step 1 – Compute drift
         try:
-            self.last_drift_score = float(
-                self.drift_monitor.measure_drift(current_features)
-            )
+            self.last_drift_score = float(self.drift_monitor.measure_drift(current_features))
         except Exception as e:
             print(f"❌ [MetaAgent] Drift measurement failed: {e}")
             return
@@ -136,18 +134,14 @@ class MetaAgent:
 
         # Step 4 – Trigger retraining if drift exceeds threshold
         if self.last_drift_score > self.drift_monitor.threshold and not self.retraining:
-            print(
-                "⚠️ [MetaAgent] Drift exceeds threshold — initiating retraining sequence."
-            )
+            print("⚠️ [MetaAgent] Drift exceeds threshold — initiating retraining sequence.")
             self.retraining = True
             self.regime_confidence *= 0.5
 
             # Spawn background retraining to avoid blocking
             def retrain_task():
                 try:
-                    print(
-                        "🚀 [MetaAgent] Starting asynchronous regime model retraining..."
-                    )
+                    print("🚀 [MetaAgent] Starting asynchronous regime model retraining...")
                     new_model = train_regime_lstm(
                         features=current_features,
                         save_dir=str(self.model_dir),
@@ -156,8 +150,8 @@ class MetaAgent:
 
                     # Load updated weights into forecaster
                     self.regime_forecaster.model = new_model
-                    self.drift_monitor.ref_stats = (
-                        self.drift_monitor.compute_feature_stats(current_features)
+                    self.drift_monitor.ref_stats = self.drift_monitor.compute_feature_stats(
+                        current_features
                     )
                     self.regime_confidence = 1.0
                     print(
@@ -173,9 +167,7 @@ class MetaAgent:
     # ---------------------------------------------------------------
     # Telemetry Export
     # ---------------------------------------------------------------
-    def export_telemetry(
-        self, path: str | Path = "F:/NEXORA/logs/metaagent_telemetry.json"
-    ):
+    def export_telemetry(self, path: str | Path = "F:/NEXORA/logs/metaagent_telemetry.json"):
         """Save telemetry (drift & confidence history) to disk for analysis."""
         try:
             path = Path(path)
@@ -194,9 +186,7 @@ if __name__ == "__main__":
     import numpy as np
 
     # Simulated data for demonstration
-    fake_prices = pd.DataFrame(
-        {"AAPL": np.random.rand(300), "GOOG": np.random.rand(300)}
-    )
+    fake_prices = pd.DataFrame({"AAPL": np.random.rand(300), "GOOG": np.random.rand(300)})
 
     fake_features = pd.DataFrame(
         {

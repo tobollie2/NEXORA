@@ -1,26 +1,23 @@
-import sys
+import hashlib
 import json
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import pandas as pd
-import numpy as np
-from pathlib import Path
-from datetime import datetime, timezone
-import hashlib
 
 
 # ---------------------------------------------------------------------
 # LSTM Model Definition
 # ---------------------------------------------------------------------
 class RegimeLSTM(nn.Module):
-    def __init__(
-        self, input_dim=5, hidden_dim=64, num_layers=2, output_dim=4, dropout=0.2
-    ):
+    def __init__(self, input_dim=5, hidden_dim=64, num_layers=2, output_dim=4, dropout=0.2):
         super().__init__()
-        self.lstm = nn.LSTM(
-            input_dim, hidden_dim, num_layers, dropout=dropout, batch_first=True
-        )
+        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers, dropout=dropout, batch_first=True)
         self.fc = nn.Linear(hidden_dim, output_dim)
         self.softmax = nn.Softmax(dim=-1)
 
@@ -73,9 +70,7 @@ def make_features(prices_df: pd.DataFrame, cluster_engine=None) -> pd.DataFrame:
         feats, columns=["rank", "score", "vol", "spread_mean", "spread_std", "corr"]
     ).dropna()
 
-    print(
-        f"✅ Generated {len(feat_df)} feature rows from {len(prices_df)} input samples."
-    )
+    print(f"✅ Generated {len(feat_df)} feature rows from {len(prices_df)} input samples.")
     return feat_df
 
 

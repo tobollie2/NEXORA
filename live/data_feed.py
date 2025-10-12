@@ -1,9 +1,10 @@
 # /live/data_feed.py
 import asyncio
-import aiohttp
 import json
 import logging
 from datetime import datetime
+
+import aiohttp
 
 
 class KrakenDataFeed:

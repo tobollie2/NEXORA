@@ -1,10 +1,11 @@
 # /monitoring/live_dashboard.py
 import os
-import pandas as pd
+
 import dash
-from dash import dcc, html, dash_table
-from dash.dependencies import Input, Output
+import pandas as pd
 import plotly.express as px
+from dash import dash_table, dcc, html
+from dash.dependencies import Input, Output
 
 METRICS_FILE = "reports/live_metrics.csv"
 TRADES_FILE = "reports/live_trades.csv"
@@ -16,9 +17,7 @@ app.title = "NEXORA Live Dashboard"
 
 def load_data():
     """Safely load metrics and trades data."""
-    metrics = (
-        pd.read_csv(METRICS_FILE) if os.path.exists(METRICS_FILE) else pd.DataFrame()
-    )
+    metrics = pd.read_csv(METRICS_FILE) if os.path.exists(METRICS_FILE) else pd.DataFrame()
     trades = pd.read_csv(TRADES_FILE) if os.path.exists(TRADES_FILE) else pd.DataFrame()
     return metrics, trades
 

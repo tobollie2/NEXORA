@@ -16,8 +16,9 @@ Example:
 """
 
 import os
-import yaml
 from types import SimpleNamespace
+
+import yaml
 
 
 # ---------------------------------------------------------------------

@@ -1,12 +1,12 @@
 # test_meta_agent.py
-import pandas as pd
 import numpy as np
+import pandas as pd
 import yaml
 
 from ai.meta_agent import MetaAgent
-from strategies.trend_following import TrendFollowingStrategy
 from strategies.mean_reversion import MeanReversionStrategy
 from strategies.statistical_arbitrage import StatisticalArbitrageStrategy
+from strategies.trend_following import TrendFollowingStrategy
 
 # Load config
 cfg = yaml.safe_load(open("config/settings.yaml", encoding="utf-8"))

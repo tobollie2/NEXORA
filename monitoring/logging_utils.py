@@ -1,19 +1,23 @@
-import logging
-from logging.handlers import RotatingFileHandler
-from rich.logging import RichHandler
-from rich.console import Console
-from datetime import datetime
-import os
 import csv
+import logging
+import os
+from datetime import datetime
+from logging.handlers import RotatingFileHandler
+
+from rich.console import Console
+from rich.logging import RichHandler
 
 # ------------------------------------------------------------
 # LOGGER SETUP
 # ------------------------------------------------------------
 
-def setup_logger(name="NEXORA", log_path=None, log_level="INFO", max_bytes=2_000_000, backup_count=5):
+
+def setup_logger(
+    name="NEXORA", log_path=None, log_level="INFO", max_bytes=2_000_000, backup_count=5
+):
     """
     Creates and configures a rich-enhanced logger with file rotation.
-    
+
     Args:
         name (str): Name of the logger instance.
         log_path (str): Path to save the log file.
@@ -32,7 +36,7 @@ def setup_logger(name="NEXORA", log_path=None, log_level="INFO", max_bytes=2_000
             show_time=False,
             show_level=True,
             show_path=False,
-            console=Console()
+            console=Console(),
         )
         console_handler.setLevel(getattr(logging, log_level.upper(), logging.INFO))
         logger.addHandler(console_handler)
@@ -41,14 +45,10 @@ def setup_logger(name="NEXORA", log_path=None, log_level="INFO", max_bytes=2_000
         if log_path:
             os.makedirs(os.path.dirname(log_path), exist_ok=True)
             file_handler = RotatingFileHandler(
-                log_path,
-                maxBytes=max_bytes,
-                backupCount=backup_count,
-                encoding="utf-8"
+                log_path, maxBytes=max_bytes, backupCount=backup_count, encoding="utf-8"
             )
             file_formatter = logging.Formatter(
-                "%(asctime)s | %(levelname)s | %(message)s",
-                datefmt="%Y-%m-%d %H:%M:%S"
+                "%(asctime)s | %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
             )
             file_handler.setFormatter(file_formatter)
             file_handler.setLevel(getattr(logging, log_level.upper(), logging.INFO))
@@ -65,10 +65,13 @@ def setup_logger(name="NEXORA", log_path=None, log_level="INFO", max_bytes=2_000
 # TRADE LOGGING UTILITIES
 # ------------------------------------------------------------
 
-def log_trade(timestamp, symbol, side, qty, price, pnl=0.0, equity=0.0, csv_path="logs/trade_log.csv"):
+
+def log_trade(
+    timestamp, symbol, side, qty, price, pnl=0.0, equity=0.0, csv_path="logs/trade_log.csv"
+):
     """
     Records trade data to a CSV file (append mode).
-    
+
     Args:
         timestamp (str): UTC timestamp of trade.
         symbol (str): Trading pair (e.g., BTC/USD).

@@ -1,111 +1,136 @@
-# pyright: reportMissingImports=false, reportMissingModuleSource=false
+# /ai/train_regime_lstm.py
+
 """
-ai/train_regime_lstm.py
----------------------------------
-Automated training script for the RegimeLSTM forecaster.
-This script regenerates features, trains the model if needed,
-and validates the saved model signature and metadata.
+NEXORA Regime LSTM Trainer
+--------------------------
+This script prepares features, trains the RegimeLSTM model,
+and saves both the model weights and metadata.
 """
 
-import os
-import pandas as pd
+from __future__ import annotations
+
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
-# ensure project root is visible to the interpreter
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-
-from datetime import datetime, timezone
+import pandas as pd
 import torch
+from torch import nn, optim
 
-# Local imports
 from ai.models.regime_lstm_trainer import (
+    RegimeLSTM,
     make_features,
-    train_regime_lstm,
-    load_regime_model,
+    save_regime_model,
 )
-from ai.models.regime_lstm_trainer import save_regime_model
-from ai.models.regime_drift_monitor import DriftMonitor
+from strategies.statistical_arbitrage_cluster import StatisticalArbitrageCluster
 
 
 # ---------------------------------------------------------------------
-# Configuration
+# Training Configuration
 # ---------------------------------------------------------------------
-DATA_PATH = Path("F:/NEXORA/data/cleaned/market_data.csv")  # Example input
-SAVE_DIR = Path("F:/NEXORA/ai/models")
-FEATURE_PATH = SAVE_DIR / "regime_features.csv"
-MODEL_PATH = SAVE_DIR / "regime_lstm.pt"
-REBUILD = False  # Set to True to force retraining
-CLUSTER_ENGINE = None  # optional placeholder for cointegration clustering
+DATA_DIR = Path("F:/NEXORA/data/cleaned")
+MODEL_DIR = Path("F:/NEXORA/ai/models")
+DEFAULT_TRAIN_FILE = DATA_DIR / "BTC_USD_1m_cleaned.csv"
 
 
-def should_retrain(model_path: Path, feature_path: Path) -> bool:
-    """Decide whether retraining is required."""
-    if not model_path.exists():
-        print("⚠️ No existing model found — retraining required.")
-        return True
-    if not feature_path.exists():
-        print("⚠️ Feature file missing — retraining required.")
-        return True
-
-    # Compare timestamps
-    model_time = datetime.fromtimestamp(model_path.stat().st_mtime, tz=timezone.utc)
-    feat_time = datetime.fromtimestamp(feature_path.stat().st_mtime, tz=timezone.utc)
-    if feat_time > model_time:
-        print("🔁 Feature file is newer than model — retraining.")
-        return True
-
-    print("✅ Existing model appears current. Skipping retrain.")
-    return False
+# ---------------------------------------------------------------------
+# Utility: Load Market Data
+# ---------------------------------------------------------------------
+def load_market_data(file_path: Path) -> pd.DataFrame:
+    """Load market data for training."""
+    if not file_path.exists():
+        raise FileNotFoundError(f"Missing data file: {file_path}")
+    df = pd.read_csv(file_path)
+    if "close" not in df.columns:
+        raise ValueError("Data file must contain a 'close' column.")
+    return df[["close"]]
 
 
-def main():
-    """Main entry point for RegimeLSTM training workflow."""
-    SAVE_DIR.mkdir(parents=True, exist_ok=True)
+# ---------------------------------------------------------------------
+# Training Routine
+# ---------------------------------------------------------------------
+def train_regime_lstm_model(
+    prices_df: pd.DataFrame,
+    cluster_engine: StatisticalArbitrageCluster,
+    epochs: int = 20,
+    save_dir: Path = MODEL_DIR,
+) -> RegimeLSTM:
+    """
+    Train a RegimeLSTM model using dynamically derived features.
+    """
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # Load or generate features
-    if not FEATURE_PATH.exists():
-        print("🧮 Generating features...")
-        if not DATA_PATH.exists():
-            raise FileNotFoundError(f"Missing input data at {DATA_PATH}")
-        prices_df = pd.read_csv(DATA_PATH, index_col=0)
-        features = make_features(prices_df, cluster_engine=CLUSTER_ENGINE)
-        features.to_csv(FEATURE_PATH, index=False)
-        print(f"✅ Saved features → {FEATURE_PATH}")
-    else:
-        features = pd.read_csv(FEATURE_PATH)
-        # ------------------------------------------------------------------
+    # -----------------------------------------------------------------
+    # 1. Build training features
+    # -----------------------------------------------------------------
+    features: pd.DataFrame = make_features(prices_df, cluster_engine)
+    if features.empty:
+        raise ValueError("Feature matrix is empty. Cannot train model.")
+
+    # -----------------------------------------------------------------
+    # 2. Construct pseudo-regime labels
+    # -----------------------------------------------------------------
+    y = torch.zeros(len(features), dtype=torch.long)
+    y[features["rank"] > 1] = 1
+    y[(features["score"] > 0.6) & (features["vol"] < 0.015)] = 2
+    y[features["vol"] > features["vol"].quantile(0.8)] = 3
+
+    # -----------------------------------------------------------------
+    # 3. Prepare tensors
+    # -----------------------------------------------------------------
+    X = torch.tensor(features.values, dtype=torch.float32).unsqueeze(0)
+    y = y[: X.shape[1]]  # align label length with sequence length
+
+    # -----------------------------------------------------------------
+    # 4. Initialize model
+    # -----------------------------------------------------------------
+    model = RegimeLSTM(input_dim=X.shape[-1])
+    model.to(device)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=1e-3)
+
+    # -----------------------------------------------------------------
+    # 5. Train loop
+    # -----------------------------------------------------------------
+    for epoch in range(epochs):
+        model.train()
+        optimizer.zero_grad()
+        outputs = model(X.to(device)).squeeze(0)
+        loss = criterion(outputs, y.to(device))
+        loss.backward()
+        optimizer.step()
+
+        if (epoch + 1) % 5 == 0:
+            print(f"[Epoch {epoch + 1}/{epochs}] Loss = {loss.item():.4f}")
+
+    # -----------------------------------------------------------------
+    # 6. Save model + metadata
+    # -----------------------------------------------------------------
+    save_dir.mkdir(parents=True, exist_ok=True)
+    save_path = save_dir / "regime_lstm.pt"
+    save_regime_model(model, save_path)
+
+    print(f"✅ Training complete at {datetime.now(timezone.utc).isoformat()}")
+    return model
 
 
-# Drift validation after training or loading
-# ------------------------------------------------------------------
-drift_monitor = DriftMonitor(MODEL_PATH.with_suffix(".meta.json"), threshold=0.25)
-
-if drift_monitor.has_drifted(features):
-    print("⚠️ Significant feature drift detected → retraining model.")
-    model = train_regime_lstm(features, save_dir=str(SAVE_DIR), epochs=15)
-else:
-    print("✅ No significant drift detected. Model stable.")
-
-    print(f"📂 Loaded existing features ({len(features)} rows)")
-
-    # Check model freshness
-    retrain = should_retrain(MODEL_PATH, FEATURE_PATH) or REBUILD
-
-    if retrain:
-        print("🚀 Beginning RegimeLSTM training process...")
-        model = train_regime_lstm(features, save_dir=str(SAVE_DIR), epochs=15)
-
-    else:
-        print("📦 Loading existing model...")
-        model = load_regime_model(MODEL_PATH)
-
-    # Post-validation of model metadata
-    print("\n🔍 Model signature check:")
-    meta = save_regime_model(model, str(MODEL_PATH))
-
-    print(f"✅ Metadata confirmed: {meta}")
-
-
+# ---------------------------------------------------------------------
+# Entrypoint
+# ---------------------------------------------------------------------
 if __name__ == "__main__":
-    main()
+    print("🚀 Starting Regime LSTM Training Pipeline")
+
+    try:
+        # Load market data
+        df = load_market_data(DEFAULT_TRAIN_FILE)
+
+        # Initialize cluster engine
+        cluster_engine = StatisticalArbitrageCluster(method="engle-granger")
+
+        # Train model
+        trained_model = train_regime_lstm_model(df, cluster_engine, epochs=25)
+
+        print("🎯 Regime LSTM training successfully completed.")
+    except Exception as e:
+        print(f"❌ Training failed: {e}")
+        sys.exit(1)

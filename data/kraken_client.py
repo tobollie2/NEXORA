@@ -1,8 +1,9 @@
 import os
 import time
-import requests
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+import requests
 
 # --------------------------------------------------------------
 # Configuration
@@ -23,9 +24,7 @@ INTERVAL_MAP = {
 
 
 # --------------------------------------------------------------
-def download_ohlc(
-    symbol: str, interval: str = "1m", since: int = None, max_batches: int = 100
-):
+def download_ohlc(symbol: str, interval: str = "1m", since: int = None, max_batches: int = 100):
     """
     Downloads historical OHLCV data from Kraken’s public API.
     Kraken’s API allows about 720 data points per call (~12 hours for 1m interval).

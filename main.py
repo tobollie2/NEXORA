@@ -1,15 +1,17 @@
-import os
 import asyncio
+import os
+
+from statistical_arbitrage import StatisticalArbitrageStrategy
+
 from config.settings_loader import load_settings
-from monitoring.logging_utils import setup_logger
 from data.ingestion import DataIngestion
 from monitoring.live_monitor import LiveMonitor
+from monitoring.logging_utils import setup_logger
 from portfolio.allocator import PortfolioAllocator
 from portfolio.trade_logger import TradeLogger  # <-- NEW: Trade Logging
 from risk.risk_manager import RiskManager
-from strategies.trend import TrendFollowingStrategy
 from strategies.mean_reversion import MeanReversionStrategy
-from statistical_arbitrage import StatisticalArbitrageStrategy
+from strategies.trend import TrendFollowingStrategy
 from tools.log_analyzer import NEXORAAnalyzer  # <-- Auto post-run analysis
 
 
@@ -64,9 +66,7 @@ class NEXORA:
             "trend": TrendFollowingStrategy(
                 self.config["strategy"]["trend_following"], self.logger
             ),
-            "mean": MeanReversionStrategy(
-                self.config["strategy"]["mean_reversion"], self.logger
-            ),
+            "mean": MeanReversionStrategy(self.config["strategy"]["mean_reversion"], self.logger),
             "stat_arb": StatisticalArbitrageStrategy(
                 self.config["strategy"].get("stat_arb", {}), self.logger
             ),
@@ -97,12 +97,8 @@ class NEXORA:
                             self.logger.info(f"📈 {name.upper()} → {signal}")
 
                             # --- Simulate trade execution and record trade ---
-                            trade_quantity = (
-                                1.0  # Placeholder (can be dynamically calculated)
-                            )
-                            pnl = self.portfolio.allocate_capital(
-                                signal, signal["price"]
-                            )
+                            trade_quantity = 1.0  # Placeholder (can be dynamically calculated)
+                            pnl = self.portfolio.allocate_capital(signal, signal["price"])
                             self.risk_manager.evaluate_risk(self.portfolio)
 
                             # --- Record Trade Event ---

@@ -4,11 +4,16 @@ NEXORA Diagnostic Tool
 Checks environment, modules, file integrity, and strategy readiness.
 """
 
+import importlib
 import os
 import sys
-import importlib
-import pandas as pd
 from pathlib import Path
+
+log_path = Path("logs/system_health.json")
+print(log_path.name)
+
+
+import pandas as pd
 
 print("🔍 Running NEXORA Diagnostic Check...\n")
 

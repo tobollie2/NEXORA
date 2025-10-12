@@ -60,9 +60,7 @@ def cleanup_nexora_project(base_path: str = "."):
     # --- 1. Find redundant files ---
     for root, dirs, files in os.walk(base):
         # Skip virtual environments or system folders
-        if any(
-            skip in root for skip in ["venv", "env", ".git", ".idea", "node_modules"]
-        ):
+        if any(skip in root for skip in ["venv", "env", ".git", ".idea", "node_modules"]):
             continue
 
         # Remove redundant folders

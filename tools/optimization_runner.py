@@ -6,22 +6,24 @@ across configured trading symbols. Integrates directly with
 the BacktestRunner and performance metrics.
 """
 
+import itertools
 import os
 import sys
-import itertools
-import pandas as pd
-from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+
+import pandas as pd
 
 # --- Ensure NEXORA root is importable ---
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-# --- Internal Imports ---
-from config.settings_loader import load_settings
 from backtest.backtest_runner import BacktestRunner
 from backtest.report_generator import BacktestReportGenerator
+
+# --- Internal Imports ---
+from config.settings_loader import load_settings
 
 
 class OptimizationRunner:
@@ -29,7 +31,8 @@ class OptimizationRunner:
     Conducts multi-strategy parameter grid optimization.
     """
 
-    def __init__(self, base_config_path="config/settings.yaml", output_dir="logs/optimization_results"):
+
+def __init__(self, base_config_path="config/settings.yaml", output_dir="logs/optimization_results"):
     # ✅ Force normal dictionary conversion
     self.config = dict(load_settings(base_config_path))
 
@@ -41,28 +44,28 @@ class OptimizationRunner:
     print("⚙️ OptimizationRunner initialized.")
     print(f"📈 Active symbols: {', '.join(self.symbols)}")
 
-        # Parameter grids per strategy
-        self.param_grids = {
-            "trend": {
-                "short_window": [10, 20, 30],
-                "long_window": [50, 80, 100],
-                "volatility_window": [10, 14, 20],
-            },
-            "mean_reversion": {
-                "lookback_window": [20, 30, 40],
-                "zscore_entry": [1.0, 1.5, 2.0],
-                "zscore_exit": [0.2, 0.3, 0.4],
-            },
-            "stat_arb": {
-                "pair_window": [50, 100, 150],
-                "entry_threshold": [1.0, 1.5, 2.0],
-                "exit_threshold": [0.2, 0.3, 0.4],
-            },
-        }
+    # Parameter grids per strategy
+    self.param_grids = {
+        "trend": {
+            "short_window": [10, 20, 30],
+            "long_window": [50, 80, 100],
+            "volatility_window": [10, 14, 20],
+        },
+        "mean_reversion": {
+            "lookback_window": [20, 30, 40],
+            "zscore_entry": [1.0, 1.5, 2.0],
+            "zscore_exit": [0.2, 0.3, 0.4],
+        },
+        "stat_arb": {
+            "pair_window": [50, 100, 150],
+            "entry_threshold": [1.0, 1.5, 2.0],
+            "exit_threshold": [0.2, 0.3, 0.4],
+        },
+    }
 
-        self.symbols = self.config["data"].get("symbols", ["BTC/USD", "ETH/USD"])
-        print("⚙️ OptimizationRunner initialized.")
-        print(f"📈 Active symbols: {', '.join(self.symbols)}")
+    self.symbols = self.config["data"].get("symbols", ["BTC/USD", "ETH/USD"])
+    print("⚙️ OptimizationRunner initialized.")
+    print(f"📈 Active symbols: {', '.join(self.symbols)}")
 
     # ------------------------------------------------------------------
     def generate_param_combinations(self, grid):
@@ -108,9 +111,7 @@ class OptimizationRunner:
                 for symbol in self.symbols:
                     for params in param_list:
                         futures.append(
-                            executor.submit(
-                                self.run_single_optimization, strat, params, symbol
-                            )
+                            executor.submit(self.run_single_optimization, strat, params, symbol)
                         )
 
             for f in as_completed(futures):
@@ -127,9 +128,7 @@ class OptimizationRunner:
 
         # Save raw CSV
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        csv_path = os.path.join(
-            self.output_dir, f"optimization_results_{timestamp}.csv"
-        )
+        csv_path = os.path.join(self.output_dir, f"optimization_results_{timestamp}.csv")
         df_all.to_csv(csv_path, index=False)
         print(f"\n💾 Optimization results saved → {csv_path}")
 

@@ -1,6 +1,6 @@
 # /optimization/optimizers/bayesian_opt.py
 from skopt import gp_minimize
-from skopt.space import Real, Integer, Categorical
+from skopt.space import Categorical, Integer, Real
 
 
 class BayesianOptimizer:

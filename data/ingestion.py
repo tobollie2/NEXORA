@@ -1,10 +1,11 @@
-import os
 import asyncio
+import os
 import random
-import pandas as pd
-import numpy as np
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 
 class DataIngestion:
@@ -114,12 +115,8 @@ class DataIngestion:
                 change = random.uniform(-0.003, 0.003)
                 open_price = last_price
                 close_price = last_price * (1 + change)
-                high_price = max(open_price, close_price) * (
-                    1 + random.uniform(0, 0.001)
-                )
-                low_price = min(open_price, close_price) * (
-                    1 - random.uniform(0, 0.001)
-                )
+                high_price = max(open_price, close_price) * (1 + random.uniform(0, 0.001))
+                low_price = min(open_price, close_price) * (1 - random.uniform(0, 0.001))
                 volume = random.uniform(0.5, 5.0)
 
                 data = {

@@ -1,7 +1,9 @@
 # strategies/base_strategy.py
 # pyright: strict
 from __future__ import annotations
+
 from typing import Any, Dict, Optional, Union
+
 import pandas as pd
 
 
