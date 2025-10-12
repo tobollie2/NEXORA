@@ -1,0 +1,33 @@
+[tool.black]
+line-length = 100
+target-version = ['py313']
+skip-string-normalization = true
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.vscode
+  | \.venv
+  | test_env
+  | dist
+  | build
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 100
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+known_first_party = ["ai"]
+known_third_party = ["torch", "pandas", "numpy"]
+default_section = "THIRDPARTY"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--maxfail=3 --disable-warnings -q"

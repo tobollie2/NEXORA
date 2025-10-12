@@ -1,0 +1,161 @@
+# ================================================
+# 🧠 NEXORA CONFIGURATION FILE
+# Environment: Development | Phase 7 — Intelligence Integrity
+# ================================================
+
+paths:
+  # --- Core directories
+  root: "F:/NEXORA"
+  data_raw: "F:/NEXORA/data/raw"
+  data_cleaned: "F:/NEXORA/data/cleaned"
+  reports: "F:/NEXORA/reports"
+  logs: "F:/NEXORA/logs"
+  portfolio: "F:/NEXORA/portfolio"
+  cache: "F:/NEXORA/.cache"
+
+  # --- AI and model artifacts
+  models: "F:/NEXORA/ai/models"
+  checkpoints: "F:/NEXORA/ai/checkpoints"
+  analytics: "F:/NEXORA/analytics"
+  backtest: "F:/NEXORA/backtest"
+  optimization: "F:/NEXORA/optimization"
+
+# ================================================
+# 📊 Data Configuration
+# ================================================
+data:
+  provider: "kraken"
+  symbols: ["BTC/USD", "ETH/USD", "SOL/USD", "XRP/USD", "ADA/USD"]
+  interval: "1m"
+  update_mode: "incremental"
+  storage_format: "csv"
+  timezone: "UTC"
+
+# ================================================
+# 🧩 Strategy Configuration
+# ================================================
+strategies:
+  TrendFollowingStrategy:
+    enabled: true
+    short_window: 20
+    long_window: 50
+
+  MeanReversionStrategy:
+    enabled: true
+    lookback: 20
+    threshold: 2.0
+
+  StatisticalArbitrageStrategy:
+    enabled: true
+    lookback: 30
+
+# ================================================
+# 🧮 Backtesting Configuration
+# ================================================
+backtest:
+  start_date: "2024-01-01"
+  end_date: "2025-01-01"
+  capital_base: 100000
+  commission: 0.001
+  slippage: 0.0005
+  parallel_execution: true
+  report_html: true
+  save_equity_curves: true
+
+# ================================================
+# 🧠 Artificial Intelligence Core
+# ================================================
+ai:
+  # --- Regime Forecasting LSTM
+  regime_forecaster:
+    model_name: "RegimeLSTM"
+    model_path: "F:/NEXORA/ai/models/regime_lstm.pt"
+    checkpoint_path: "F:/NEXORA/ai/checkpoints/regime_lstm_last.pt"
+    input_features: 5
+    sequence_length: 60
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+    optimizer: "Adam"
+    learning_rate: 0.001
+    status: "active"
+    expected_files:
+      - "F:/NEXORA/ai/models/regime_lstm.pt"
+      - "F:/NEXORA/ai/checkpoints/regime_lstm_last.pt"
+
+  # --- Reinforcement Learning Agent Core
+  agent_core:
+    class: "DeepAdaptiveAgent"
+    version: "1.2.0"
+    epsilon: 0.1
+    learning_rate: 0.01
+    gamma: 0.95
+    memory_size: 5000
+    update_interval: 10
+    model_path: "F:/NEXORA/ai/models/deep_agent.pt"
+    checkpoint_path: "F:/NEXORA/ai/checkpoints/deep_agent_last.pt"
+    expected_files:
+      - "F:/NEXORA/ai/models/deep_agent.pt"
+      - "F:/NEXORA/ai/checkpoints/deep_agent_last.pt"
+
+  # --- Meta-Agent Coordination Layer
+  meta_agent:
+    version: "0.9.4"
+    regime_adaptation: true
+    drift_detection: true
+    temporal_memory: 5000
+    log_drift_events: true
+    performance_tracking: "F:/NEXORA/analytics/meta_agent_performance.csv"
+
+  # --- Optimizer & Scheduler
+  optimizer:
+    type: "AdamW"
+    lr_decay: true
+    decay_rate: 0.98
+    weight_decay: 0.001
+    gradient_clip: 1.0
+
+# ================================================
+# 📈 Portfolio Management
+# ================================================
+portfolio:
+  rebalance_interval: "1d"
+  max_positions: 5
+  allocation_method: "risk_parity"
+  max_drawdown: 0.2
+  rebalance_mode: "dynamic"
+
+# ================================================
+# ⚠️ Risk Management
+# ================================================
+risk:
+  max_exposure: 0.75
+  stop_loss_pct: 0.05
+  take_profit_pct: 0.15
+  volatility_target: 0.2
+  risk_model: "EWMA"
+
+# ================================================
+# 🧰 Monitoring & Diagnostics
+# ================================================
+monitoring:
+  log_level: "INFO"
+  enable_console_log: true
+  enable_file_log: true
+  heartbeat_interval: 60
+  diagnostics_enabled: true
+  telemetry_export: false
+  system_health_file: "F:/NEXORA/logs/system_health.json"
+
+# ================================================
+# 🧾 Metadata & Version Control
+# ================================================
+meta:
+  framework_version: "7.0.0"
+  last_verified: "2025-10-11"
+  python_version: "3.11"
+  compatible_pytorch: "2.2+"
+  author: "NEXORA Research Lab"
+  notes: |
+    Phase 7 — Intelligence Integrity Layer.
+    Model readiness and checkpoint verification are now part of system diagnostics.
