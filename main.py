@@ -1,3 +1,4 @@
+import bootstrap  # ensures .env loads first
 import asyncio
 import os
 
@@ -13,7 +14,6 @@ from risk.risk_manager import RiskManager
 from strategies.mean_reversion import MeanReversionStrategy
 from strategies.trend import TrendFollowingStrategy
 from tools.log_analyzer import NEXORAAnalyzer  # <-- Auto post-run analysis
-
 
 class NEXORA:
     """

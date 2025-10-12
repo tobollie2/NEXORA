@@ -1,4 +1,21 @@
+# bootstrap.py
+
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# -------------------------------------------------------------
+# 🌍 Load environment variables automatically
+# -------------------------------------------------------------
+BASE_DIR = Path(__file__).resolve().parent
+env_path = BASE_DIR / ".env"
+
+if env_path.exists():
+    load_dotenv(env_path)
+    print(f"✅ Environment variables loaded from {env_path}")
+else:
+    print("⚠️ No .env file found. Using system environment variables.")
+
 
 project_root = "F:/NEXORA"
 
