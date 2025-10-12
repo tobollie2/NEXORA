@@ -1,8 +1,0 @@
-{
-  "signature": "2396a7a1986cbca534c03f767ae5698a",
-  "arch": {
-    "input_dim": 5,
-    "hidden_dim": 64,
-    "num_layers": 2
-  }
-}

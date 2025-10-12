@@ -1,6 +1,0 @@
-file,interval,rows,missing,coverage
-ADA_USD_1m.csv,1m,722,0,100.0
-BTC_USD_1m.csv,1m,722,0,100.0
-ETH_USD_1m.csv,1m,721,0,100.0
-SOL_USD_1m.csv,1m,722,0,100.0
-XRP_USD_1m.csv,1m,721,0,100.0

@@ -1,19 +1,69 @@
-# Virtual environment
+# ---------------------------
+# Python & Virtual Environments
+# ---------------------------
 venv/
 .venv/
-
-# Python cache
+env/
+test_env/
+env.bak/
+*.py[cod]
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
 
-# VS Code
+# ---------------------------
+# IDEs & Editors
+# ---------------------------
 .vscode/
+.idea/
 
-# System files
+# ---------------------------
+# Logs, Reports & Outputs
+# ---------------------------
+logs/
+*.log
+*.csv
+*.json
+*.html
+*.png
+*.jpg
+reports/
+monitoring_output/
+nexora_report_*.*
+drawdown_curve_*.*
+equity_curve_*.*
+system_performance_*.*
+optimization_results/
+backtest_results/
+
+# ---------------------------
+# Data files
+# ---------------------------
+data/*.csv
+data/cleaned/
+data/kraken/
+data/raw/
+data/integrity_*.csv
+data/feature_store.pkl
+data/*.parquet
+
+# ---------------------------
+# Configuration / Secrets
+# ---------------------------
+.env
+*.env
+config/secrets.env
+config/secrets.yaml
+config/settings_local.yaml
+config/settings_dev.yaml
+
+# ---------------------------
+# Jupyter Notebooks
+# ---------------------------
+*.ipynb_checkpoints
+
+# ---------------------------
+# OS / Miscellaneous
+# ---------------------------
 .DS_Store
 Thumbs.db
-
-# Secrets
-config/secrets.env
+*.bak
+*.swp
