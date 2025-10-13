@@ -1,6 +1,13 @@
 # 🧠 NEXORA  
 Adaptive Regime Detection and Strategy Optimization Framework for Quantitative Trading  
 
+[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Build Status](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-ci.yml/badge.svg)](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-ci.yml)
+[![Model Retraining](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-train.yml/badge.svg)](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-train.yml)
+[![Last Commit](https://img.shields.io/github/last-commit/tobollie2/NEXORA.svg)](https://github.com/tobollie2/NEXORA/commits/main)
+
+
 [![CI Status](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-ci.yml/badge.svg)](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-ci.yml)
 [![Model Retraining](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-train.yml/badge.svg)](https://github.com/tobollie2/NEXORA/actions/workflows/nexora-train.yml)
 
