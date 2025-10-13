@@ -1,4 +1,6 @@
+# NEXORA CI workflow - test trigger
 name: NEXORA Continuous Integration
+
 
 on:
   push:
