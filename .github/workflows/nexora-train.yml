@@ -1,4 +1,4 @@
-name: NEXORA Model Retraining (test)
+name: NEXORA Model Retraining 
 
 on:
   push:
