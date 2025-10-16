@@ -1,0 +1,20 @@
+-r requirements.txt
+
+# ==============================================
+# NEXORA Development Dependencies
+# ----------------------------------------------
+# This file extends the core runtime requirements with additional
+# tools for testing, linting, formatting, and continuous integration.
+# It ensures a fully reproducible development environment.
+# ==============================================
+
+
+# Development and testing
+black>=24.0
+flake8>=6.1
+isort>=5.12
+mypy>=1.6
+pytest>=8.4
+pytest-cov>=7.0
+pytest-dependency>=0.6
+pre-commit>=3.5
